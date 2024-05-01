@@ -32,7 +32,7 @@ namespace RapidPayChallenge.CardMngr
             this.paymFeeRepository = paymFeeRepository;
             this.config = config;
             this.logger = logger;
-            _defaultAccountEmail = config["DefaultAccountEmail"];
+            _defaultAccountEmail = config["DefaultEmail"];
         }
 
         public CreateCardResp CreateNewCard(CreateCardReq req)

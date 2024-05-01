@@ -7,6 +7,9 @@ namespace RapidPayChallenge.Data
 {
     public class RapidPayDbContext : DbContext
     {
+        public RapidPayDbContext(DbContextOptions<RapidPayDbContext> options) : base(options)
+        {
+        }
         public DbSet<Account> Accounts { get; set; }
 
         public DbSet<Card> Cards { get; set; }
