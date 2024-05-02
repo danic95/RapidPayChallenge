@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,16 +9,17 @@ using RapidPayChallenge.Domain.Requests;
 namespace RapidPayChallenge.Controllers
 {
     [AllowAnonymous]
+    [ApiController]
     public class AuthController : Controller
     {
-        IUserAuthService userAuthService;
-        ILogger<AuthController> logger;
+        readonly IUserAuthService _userAuthService;
+        readonly ILogger<AuthController> _logger;
 
         public AuthController(IUserAuthService userAuthService,
         ILogger<AuthController> logger)
         {
-            this.userAuthService = userAuthService;
-            this.logger = logger;
+            _userAuthService = userAuthService;
+            _logger = logger;
         }
 
         [HttpPost("access-token")]
@@ -29,13 +27,13 @@ namespace RapidPayChallenge.Controllers
         {
             try
             {
-                var (accessToken, expiresAt) = userAuthService.GetAccessToken(req);
+                var (accessToken, expiresAt) = _userAuthService.GetAccessToken(req);
                 return Ok(new { Token = accessToken, ExpiresAt = expiresAt });
             }
             catch (Exception ex)
             {
                 var logError = $"Error logging in user: {req.User}. Error message: {ex.Message}";
-                logger.LogError(logError, ex);
+                _logger.LogError(logError, ex);
                 return this.StatusCode(StatusCodes.Status500InternalServerError, logError);
             }
         }

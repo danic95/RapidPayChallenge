@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,10 +9,12 @@ using RapidPayChallenge.Domain.Responses;
 
 namespace RapidPayChallenge.Controllers
 {
+    [Authorize]
+    [ApiController]
     public class CardMngrController : Controller
     {
-        ICardMngrService _cardMngrService;
-        ILogger<CardMngrController> _logger;
+        readonly ICardMngrService _cardMngrService;
+        readonly ILogger<CardMngrController> _logger;
 
         public CardMngrController(ICardMngrService cardMngrService,
         ILogger<CardMngrController> logger)
@@ -79,7 +79,7 @@ namespace RapidPayChallenge.Controllers
             }
             catch (Exception ex)
             {
-                var logError = $"Error retrieving card with number: {cardNum}. Error message: {ex.Message}";
+                var logError = $"Error retrieving card number: {cardNum}. Error message: {ex.Message}";
                 _logger.LogError(logError, ex);
                 return this.StatusCode(StatusCodes.Status500InternalServerError, logError);
             }

@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RapidPayChallenge.CardMngr;
@@ -72,7 +66,6 @@ namespace RapidPayChallenge
 
             services.AddSwaggerGen(option =>
             {
-                //option.SwaggerDoc("v1", new OpenApiInfo { Title = "RapidPayChallenge API", Version = "v1" });
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -121,11 +114,12 @@ namespace RapidPayChallenge
             {
                 endpoints.MapControllers();
             });
+
+            InitDb(app);
         }
 
-        public void InitializeDatabase(IApplicationBuilder app)
+        public void InitDb(IApplicationBuilder app)
         {
-            // Create Database if configured flag is true, otherwise it can be created with ef core migration
             if (Configuration.GetValue<bool>("CreateDbOnRuntimeExecution"))
             {
                 using IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
