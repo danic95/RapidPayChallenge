@@ -18,7 +18,7 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public CreateCardResp CreateNewCard(CreateCardReq req, Guid accountId)
+        public async Task<CreateCardResp> CreateNewCard(CreateCardReq req, Guid accountId)
         {
             var newCard = new Card
             {
@@ -29,15 +29,15 @@ namespace RapidPayChallenge.Data.Repositories
                 Balance = req.Balance,
                 AccountId = accountId
             };
-            context.Add(newCard);
-            context.SaveChanges();
+            await context.AddAsync(newCard);
+            await context.SaveChangesAsync();
 
             return new CreateCardResp() { Number = newCard.Number };
         }
 
-        public decimal? GetCardBalance(string cardNumber)
+        public async Task<decimal?> GetCardBalance(string cardNumber)
         {
-            var card = GetCard(cardNumber);
+            var card = await GetCard(cardNumber);
             if (card == null)
             {
                 return null;
@@ -45,9 +45,9 @@ namespace RapidPayChallenge.Data.Repositories
             return card.Balance;
         }
 
-        public bool SaveTransaction(string cardNumber, decimal payment, decimal fee, string? reference)
+        public async Task<bool> SaveTransaction(string cardNumber, decimal payment, decimal fee, string? reference)
         {
-            var card = GetCard(cardNumber);
+            var card = await GetCard(cardNumber);
             if (card == null)
             {
                 return false;
@@ -63,9 +63,9 @@ namespace RapidPayChallenge.Data.Repositories
             return true;
         }
 
-        public bool UpdateBalance(string cardNumber, decimal amount)
+        public async Task<bool> UpdateBalance(string cardNumber, decimal amount)
         {
-            var card = GetCard(cardNumber);
+            var card = await GetCard(cardNumber);
             if (card == null)
             {
                 return false;
@@ -75,8 +75,8 @@ namespace RapidPayChallenge.Data.Repositories
             return true;
         }
 
-        public Card GetCard(string cardNumber) =>
-            context.Cards.FirstOrDefault(x => x.Number == cardNumber);
+        public async Task<Card> GetCard(string cardNumber) =>
+            await context.Cards.FirstOrDefaultAsync(x => x.Number == cardNumber);
 
     }
 }

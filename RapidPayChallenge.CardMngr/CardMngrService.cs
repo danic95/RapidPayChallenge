@@ -35,30 +35,26 @@ namespace RapidPayChallenge.CardMngr
             _defaultAccountEmail = config["DefaultEmail"];
         }
 
-        public CreateCardResp CreateNewCard(CreateCardReq req)
+        public async Task<CreateCardResp> CreateNewCard(CreateCardReq req)
         {
             Guid accountId;
 
             if (req.Account != null)
             {
-                accountId = accountRepository.CreateAccount(req.Account);
+                accountId = await accountRepository.CreateAccount(req.Account);
             }
             else
             {
-                var defaultAccount = accountRepository.GetAccount(_defaultAccountEmail);
-                accountId = defaultAccount != null
-                            ?
-                            defaultAccount.Id
-                            :
-                            throw new ApplicationException("Default account not found");
+                var defaultAccount = await accountRepository.GetAccount(_defaultAccountEmail);
+                accountId = defaultAccount != null ? defaultAccount.Id : throw new ApplicationException("Default account not found");
             }
 
-            return cardRepository.CreateNewCard(req, accountId);
+            return await cardRepository.CreateNewCard(req, accountId);
         }
 
-        public BalanceResp? GetCardBalance(string cardNumber)
+        public async Task<BalanceResp?> GetCardBalance(string cardNumber)
         {
-            decimal? balance = cardRepository.GetCardBalance(cardNumber);
+            decimal? balance = await cardRepository.GetCardBalance(cardNumber);
             if (balance == null)
             {
                 return null;
@@ -66,13 +62,13 @@ namespace RapidPayChallenge.CardMngr
             return new BalanceResp { Balance = balance.Value, Number = cardNumber };
         }
 
-        public PaymResp ProcessPayment(PaymReq req)
+        public async Task<PaymResp> ProcessPayment(PaymReq req)
         {
             logger.LogInformation(
                $"Process a payment with card number {req.Number} and amount {req.Amount}");
-            var currBalance = GetCardBalance(req.Number) ?? throw new ApplicationException("The card has no balance");
+            var currBalance = await GetCardBalance(req.Number) ?? throw new ApplicationException("The card has no balance");
 
-            var feeToPay = UFEService.Instance.GetPaymentFee(paymFeeRepository);
+            var feeToPay = await UFEService.Instance.GetPaymentFee(paymFeeRepository);
 
             var totalDiscounted = req.Amount + feeToPay;
             if (currBalance.Balance - totalDiscounted < 0)
@@ -81,9 +77,9 @@ namespace RapidPayChallenge.CardMngr
             }
 
             var response = new PaymResp(req.Number);
-            if (cardRepository.SaveTransaction(req.Number, req.Amount, feeToPay, req.Reference))
+            if (await cardRepository.SaveTransaction(req.Number, req.Amount, feeToPay, req.Reference))
             {
-                cardRepository.UpdateBalance(req.Number, req.Amount + feeToPay);
+                await cardRepository.UpdateBalance(req.Number, req.Amount + feeToPay);
                 response.AmountPaid = req.Amount;
                 response.FeePaid = feeToPay;
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,11 +26,11 @@ namespace RapidPayChallenge.Controllers
 
         // POST: CardMngrController/CreateCard
         [HttpPost("CardMngrController/CreateCard")]
-        public ActionResult<CreateCardResp> CreateCard(CreateCardReq req)
+        public async Task<ActionResult<CreateCardResp>> CreateCard(CreateCardReq req)
         {
             try
             {
-                CreateCardResp resp = _cardMngrService.CreateNewCard(req);
+                CreateCardResp resp = await _cardMngrService.CreateNewCard(req);
                 return CreatedAtAction("Balance", new { cardNum = resp.Number }, resp);
             }
             catch (Exception ex)
@@ -42,12 +43,12 @@ namespace RapidPayChallenge.Controllers
 
         // PUT: CardMngrController/Payment
         [HttpPut("CardMngrController/Payment")]
-        public ActionResult<PaymResp> Payment([FromBody] PaymReq req)
+        public async Task<ActionResult<PaymResp>> Payment([FromBody] PaymReq req)
         {
             PaymResp response;
             try
             {
-                response = _cardMngrService.ProcessPayment(req);
+                response = await _cardMngrService.ProcessPayment(req);
             }
             catch (Exception ex)
             {
@@ -65,11 +66,11 @@ namespace RapidPayChallenge.Controllers
         // GET: CardMngrController/Balance/12345
         [HttpGet("CardMngrController/Balance/{cardNum}")]
         //[ValidateAntiForgeryToken]
-        public ActionResult<BalanceResp> Balance([FromRoute] string cardNum)
+        public async Task<ActionResult<BalanceResp>> Balance([FromRoute] string cardNum)
         {
             try
             {
-                var card = _cardMngrService.GetCardBalance(cardNum);
+                var card = await _cardMngrService.GetCardBalance(cardNum);
                 if (card == null)
                 {
                     return NotFound(new { message = $"Card number {cardNum} does not exist" });

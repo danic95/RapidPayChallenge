@@ -10,10 +10,10 @@ namespace RapidPayChallenge.CardMngr
 {
     public interface ICardMngrService
     {
-        public CreateCardResp CreateNewCard(CreateCardReq req);
+        public Task<CreateCardResp> CreateNewCard(CreateCardReq req);
 
-        PaymResp ProcessPayment(PaymReq request);
+        Task<PaymResp> ProcessPayment(PaymReq request);
 
-        public BalanceResp? GetCardBalance(string cardNumber);
+        public Task<BalanceResp?> GetCardBalance(string cardNumber);
     }
 }

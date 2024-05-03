@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using RapidPayChallenge.Domain.Models;
 
 namespace RapidPayChallenge.Data.Repositories
@@ -12,7 +14,7 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public bool CreateNewPaymFee(decimal fee)
+        public async Task<bool> CreateNewPaymFee(decimal fee)
         {
             var paymentFee = new PaymFee
             {
@@ -21,7 +23,7 @@ namespace RapidPayChallenge.Data.Repositories
             context.Add(paymentFee);
             try
             {
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -31,17 +33,17 @@ namespace RapidPayChallenge.Data.Repositories
             return true;
         }
 
-        public (decimal currentFee, DateTime lastUpdated) GetLastPaymFee()
+        public async Task<(decimal currentFee, DateTime lastUpdated)> GetLastPaymFee()
         {
-            var paymentFee = context.PaymFees
+            var paymFee = await context.PaymFees
                                         .OrderBy(x => x.Created)
                                         .Take(1)
-                                        .SingleOrDefault();
-            if (paymentFee == null)
+                                        .SingleOrDefaultAsync();
+            if (paymFee == null)
             {
                 return default;
             }
-            return (paymentFee.Fee, paymentFee.Created);
+            return (paymFee.Fee, paymFee.Created);
         }
     }
 }
