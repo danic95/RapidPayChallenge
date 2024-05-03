@@ -10,7 +10,7 @@ namespace RapidPayChallenge.Data.Repositories
 {
     public interface IAccountRepository
     {
-        Guid CreateAccount(AccountReq req);
-        Account GetAccount(string email);
+        Task<Guid> CreateAccount(AccountReq req);
+        Task<Account> GetAccount(string email);
     }
 }

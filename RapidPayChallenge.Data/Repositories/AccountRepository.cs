@@ -17,9 +17,9 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public Guid CreateAccount(AccountReq req)
+        public async Task<Guid> CreateAccount(AccountReq req)
         {
-            var account = GetAccount(req.Email ?? string.Empty);
+            var account = await GetAccount(req.Email ?? string.Empty);
             if (account != null)
             {
                 return account.Id;
@@ -38,8 +38,8 @@ namespace RapidPayChallenge.Data.Repositories
             return newAccount.Id;
         }
 
-        public Account GetAccount(string email) =>
-            context.Accounts.FirstOrDefault(x => x.Email == email);
+        public async Task<Account> GetAccount(string email) =>
+            await context.Accounts.FirstOrDefaultAsync(x => x.Email == email);
 
     }
 }

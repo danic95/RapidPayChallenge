@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,18 +24,18 @@ namespace RapidPayChallenge.Controllers
         }
 
         [HttpPost("access-token")]
-        public ActionResult GetAccessToken(LoginReq req)
+        public async Task<ActionResult> GetAccessToken(LoginReq req)
         {
             try
             {
-                var (accessToken, expiresAt) = _userAuthService.GetAccessToken(req);
+                var (accessToken, expiresAt) = await _userAuthService.GetAccessToken(req);
                 return Ok(new { Token = accessToken, ExpiresAt = expiresAt });
             }
             catch (Exception ex)
             {
                 var logError = $"Error logging in user: {req.User}. Error message: {ex.Message}";
                 _logger.LogError(logError, ex);
-                return this.StatusCode(StatusCodes.Status500InternalServerError, logError);
+                return StatusCode(StatusCodes.Status500InternalServerError, logError);
             }
         }
     }

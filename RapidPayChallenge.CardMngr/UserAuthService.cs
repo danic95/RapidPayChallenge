@@ -23,9 +23,9 @@ namespace RapidPayChallenge.CardMngr
             this.config = config;
         }
 
-        public (string?, DateTime?) GetAccessToken(LoginReq req)
+        public async Task<(string?, DateTime?)> GetAccessToken(LoginReq req)
         {
-            var account = accountRepository.GetAccount(req.User);
+            var account = await accountRepository.GetAccount(req.User);
             if (account == null)
             {
                 return (null, null);

@@ -9,6 +9,6 @@ namespace RapidPayChallenge.CardMngr
 {
     public interface IUserAuthService
     {
-        public (string?, DateTime?) GetAccessToken(LoginReq req);
+        public Task<(string?, DateTime?)> GetAccessToken(LoginReq req);
     }
 }
