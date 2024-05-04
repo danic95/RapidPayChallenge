@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RapidPayChallenge.Domain.Models;
-using RapidPayChallenge.Domain.Requests;
-using RapidPayChallenge.Domain.Responses;
 
 namespace RapidPayChallenge.Data.Repositories
 {
@@ -18,30 +16,17 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public async Task<CreateCardResp> CreateNewCard(CreateCardReq req, Guid accountId)
+        public async Task<string> CreateNewCard(Card newCard, Guid accountId)
         {
-            var newCard = new Card
-            {
-                Number = req.Number,
-                ExpMonth = req.ExpMonth,
-                ExpYear = req.ExpYear,
-                CVC = req.CVC,
-                Balance = req.Balance,
-                AccountId = accountId
-            };
             await context.AddAsync(newCard);
             await context.SaveChangesAsync();
 
-            return new CreateCardResp() { Number = newCard.Number };
+            return newCard.Number;
         }
 
         public async Task<decimal?> GetCardBalance(string cardNumber)
         {
             var card = await GetCard(cardNumber);
-            if (card == null)
-            {
-                return null;
-            }
             return card.Balance;
         }
 

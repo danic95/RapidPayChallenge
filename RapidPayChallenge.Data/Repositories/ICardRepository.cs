@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RapidPayChallenge.Domain.Models;
-using RapidPayChallenge.Domain.Requests;
-using RapidPayChallenge.Domain.Responses;
 
 namespace RapidPayChallenge.Data.Repositories
 {
     public interface ICardRepository
     {
-        Task<CreateCardResp> CreateNewCard(CreateCardReq req, Guid accountId);
+        Task<string> CreateNewCard(Card req, Guid accountId);
 
         Task<decimal?> GetCardBalance(string cardNumber);
 

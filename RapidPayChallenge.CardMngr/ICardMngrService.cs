@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RapidPayChallenge.Domain.Requests;
-using RapidPayChallenge.Domain.Responses;
+using RapidPayChallenge.Domain.Models;
 
 namespace RapidPayChallenge.CardMngr
 {
     public interface ICardMngrService
     {
-        public Task<CreateCardResp> CreateNewCard(CreateCardReq req);
+        public Task<string> CreateNewCard(Card req);
 
-        Task<PaymResp> ProcessPayment(PaymReq request);
+        Task<(string, decimal, decimal)> ProcessPayment(string Number, decimal Amount, string Reference);
 
-        public Task<BalanceResp?> GetCardBalance(string cardNumber);
+        public Task<decimal?> GetCardBalance(string cardNumber);
     }
 }

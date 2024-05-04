@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RapidPayChallenge.Data.Repositories;
-using RapidPayChallenge.Domain.Requests;
-using RapidPayChallenge.Domain.Responses;
+using RapidPayChallenge.Domain.Models;
 using RapidPayChallenge.PaymFees;
 
 namespace RapidPayChallenge.CardMngr
@@ -35,7 +34,7 @@ namespace RapidPayChallenge.CardMngr
             _defaultAccountEmail = config["DefaultEmail"];
         }
 
-        public async Task<CreateCardResp> CreateNewCard(CreateCardReq req)
+        public async Task<string> CreateNewCard(Card req)
         {
             Guid accountId;
 
@@ -52,39 +51,40 @@ namespace RapidPayChallenge.CardMngr
             return await cardRepository.CreateNewCard(req, accountId);
         }
 
-        public async Task<BalanceResp?> GetCardBalance(string cardNumber)
+        public async Task<decimal?> GetCardBalance(string cardNumber)
         {
             decimal? balance = await cardRepository.GetCardBalance(cardNumber);
             if (balance == null)
             {
                 return null;
             }
-            return new BalanceResp { Balance = balance.Value, Number = cardNumber };
+            return balance.Value;
         }
 
-        public async Task<PaymResp> ProcessPayment(PaymReq req)
+        public async Task<(string,decimal,decimal)> ProcessPayment(string Number, decimal Amount, string Reference)
         {
-            logger.LogInformation(
-               $"Process a payment with card number {req.Number} and amount {req.Amount}");
-            var currBalance = await GetCardBalance(req.Number) ?? throw new ApplicationException("The card has no balance");
-
-            var feeToPay = await UFEService.Instance.GetPaymentFee(paymFeeRepository);
-
-            var totalDiscounted = req.Amount + feeToPay;
-            if (currBalance.Balance - totalDiscounted < 0)
+            try
             {
-                throw new ApplicationException("There is not enough balance to process this payment");
-            }
+                logger.LogInformation(
+                   $"Process a payment with card number {Number} and amount {Amount}");
+                var currBalance = await GetCardBalance(Number) ?? throw new ArgumentException("The card has no balance");
 
-            var response = new PaymResp(req.Number);
-            if (await cardRepository.SaveTransaction(req.Number, req.Amount, feeToPay, req.Reference))
+                var feeToPay = await UFEService.Instance.GetPaymentFee(paymFeeRepository);
+
+                var totalDiscounted = Amount + feeToPay;
+                if (currBalance - totalDiscounted < 0)
+                {
+                    throw new ArgumentException("There is not enough balance to process this payment");
+                }
+
+                await cardRepository.SaveTransaction(Number, Amount, feeToPay, Reference);
+
+                return (Number, Amount, feeToPay);
+            }
+            catch(Exception e)
             {
-                await cardRepository.UpdateBalance(req.Number, req.Amount + feeToPay);
-                response.AmountPaid = req.Amount;
-                response.FeePaid = feeToPay;
+                throw e;
             }
-
-            return response;
         }
     }
 }
