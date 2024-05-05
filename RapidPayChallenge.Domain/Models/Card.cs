@@ -8,7 +8,6 @@ namespace RapidPayChallenge.Domain.Models
 {
     public class Card
     {
-        public virtual ICollection<Card> Cards { get; set; } = null!;
 
         public Guid Id { get; set; }
 

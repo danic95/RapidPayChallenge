@@ -11,7 +11,7 @@ namespace RapidPayChallenge.CardMngr
     {
         public Task<string> CreateNewCard(Card req);
 
-        Task<(string, decimal, decimal)> ProcessPayment(string Number, decimal Amount, string Reference);
+        Task<(string, decimal, decimal)> ProcessPayment(string Number, decimal Amount);
 
         public Task<decimal?> GetCardBalance(string cardNumber);
     }

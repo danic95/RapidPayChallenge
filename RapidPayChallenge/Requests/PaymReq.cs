@@ -12,6 +12,5 @@ namespace RapidPayChallenge.Requests
 
         public decimal Amount { get; set; }
 
-        public string? Reference { get; set; }
     }
 }

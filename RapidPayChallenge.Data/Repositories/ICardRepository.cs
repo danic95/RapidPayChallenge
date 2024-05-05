@@ -13,9 +13,7 @@ namespace RapidPayChallenge.Data.Repositories
 
         Task<decimal?> GetCardBalance(string cardNumber);
 
-        Task<bool> SaveTransaction(string cardNumber, decimal amount, decimal fee, string? reference);
-
-        Task<bool> UpdateBalance(string cardNumber, decimal amount);
+        Task<bool> SaveTransaction(string cardNumber, decimal amount, decimal fee);
 
         Task<Card> GetCard(string cardNumber);
     }

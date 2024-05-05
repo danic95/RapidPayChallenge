@@ -65,7 +65,7 @@ namespace RapidPayChallenge.Controllers
             PaymResp response;
             try
             {
-                (string num, decimal amo, decimal fee) = await _cardMngrService.ProcessPayment(req.Number, req.Amount, req.Reference);
+                (string num, decimal amo, decimal fee) = await _cardMngrService.ProcessPayment(req.Number, req.Amount);
                 response = new PaymResp(num){ CardNumber = num,
                     AmountPaid = amo,
                     FeePaid = fee };

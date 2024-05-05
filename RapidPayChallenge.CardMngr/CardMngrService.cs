@@ -61,7 +61,7 @@ namespace RapidPayChallenge.CardMngr
             return balance.Value;
         }
 
-        public async Task<(string,decimal,decimal)> ProcessPayment(string Number, decimal Amount, string Reference)
+        public async Task<(string,decimal,decimal)> ProcessPayment(string Number, decimal Amount)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace RapidPayChallenge.CardMngr
                     throw new ArgumentException("There is not enough balance to process this payment");
                 }
 
-                await cardRepository.SaveTransaction(Number, Amount, feeToPay, Reference);
+                await cardRepository.SaveTransaction(Number, Amount, feeToPay);
 
                 return (Number, Amount, feeToPay);
             }

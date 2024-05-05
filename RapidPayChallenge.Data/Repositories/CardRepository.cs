@@ -30,7 +30,7 @@ namespace RapidPayChallenge.Data.Repositories
             return card.Balance;
         }
 
-        public async Task<bool> SaveTransaction(string cardNumber, decimal payment, decimal fee, string? reference)
+        public async Task<bool> SaveTransaction(string cardNumber, decimal payment, decimal fee)
         {
             var card = await GetCard(cardNumber);
             if (card == null)
@@ -43,19 +43,8 @@ namespace RapidPayChallenge.Data.Repositories
                 PaymFee = fee,
                 CardId = card.Id
             };
+            card.Balance -= payment + fee;
             context.Add(payTransaction);
-            context.SaveChanges();
-            return true;
-        }
-
-        public async Task<bool> UpdateBalance(string cardNumber, decimal amount)
-        {
-            var card = await GetCard(cardNumber);
-            if (card == null)
-            {
-                return false;
-            }
-            card.Balance -= amount;
             context.SaveChanges();
             return true;
         }
