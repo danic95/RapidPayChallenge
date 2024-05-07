@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RapidPayChallenge.CardMngr;
 using RapidPayChallenge.Requests;
+using RapidPayChallenge.Responses;
 
 namespace RapidPayChallenge.Controllers
 {
@@ -29,7 +30,7 @@ namespace RapidPayChallenge.Controllers
             try
             {
                 (string accessToken, DateTime? expiresAt) = await _userAuthService.GetAccessToken(req.User, req.Pass);
-                return Ok(new { Token = accessToken, ExpiresAt = expiresAt });
+                return Ok(new LoginResp(){ Token = accessToken, ExpiresAt = expiresAt });
             }
             catch (Exception ex)
             {

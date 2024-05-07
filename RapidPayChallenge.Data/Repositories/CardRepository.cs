@@ -18,34 +18,48 @@ namespace RapidPayChallenge.Data.Repositories
 
         public async Task<string> CreateNewCard(Card newCard, Guid accountId)
         {
-            await context.AddAsync(newCard);
-            await context.SaveChangesAsync();
+            using (var dbContextTransaction = context.Database.BeginTransaction())
+            {
+                await context.AddAsync(newCard);
+                await context.SaveChangesAsync();
 
+                dbContextTransaction.Commit();
+            }
             return newCard.Number;
         }
 
         public async Task<decimal?> GetCardBalance(string cardNumber)
         {
             var card = await GetCard(cardNumber);
+            if (card == null)
+            {
+                return null;
+            }
             return card.Balance;
         }
 
         public async Task<bool> SaveTransaction(string cardNumber, decimal payment, decimal fee)
         {
-            var card = await GetCard(cardNumber);
-            if (card == null)
+            using (var dbContextTransaction = context.Database.BeginTransaction())
             {
-                return false;
+                var card = await GetCard(cardNumber);
+                if (card == null)
+                {
+                    return false;
+                }
+                var payTransaction = new Transac
+                {
+                    Amount = payment,
+                    PaymFee = fee,
+                    CardId = card.Id
+                };
+                card.Balance -= payment + fee;
+                await context.AddAsync(payTransaction);
+                await context.SaveChangesAsync();
+
+                dbContextTransaction.Commit();
             }
-            var payTransaction = new Transac
-            {
-                Amount = payment,
-                PaymFee = fee,
-                CardId = card.Id
-            };
-            card.Balance -= payment + fee;
-            context.Add(payTransaction);
-            context.SaveChanges();
+
             return true;
         }
 

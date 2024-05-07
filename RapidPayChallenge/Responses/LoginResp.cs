@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RapidPayChallenge.Responses
 {
-    public class BalanceResp
+    public class LoginResp
     {
-        public string Number { get; set; } = null!;
-        public decimal? Balance { get; set; } = null!;
+        public string Token { get; set; } = null!;
+        public DateTime? ExpiresAt { get; set; } = null!;
     }
 }

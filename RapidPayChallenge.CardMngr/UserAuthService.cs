@@ -8,7 +8,6 @@ using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RapidPayChallenge.Data.Repositories;
-using RapidPayChallenge.Domain.Models;
 
 namespace RapidPayChallenge.CardMngr
 {

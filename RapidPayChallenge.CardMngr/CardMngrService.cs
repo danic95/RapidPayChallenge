@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using RapidPayChallenge.CardMngr.DTO;
 using RapidPayChallenge.Data.Repositories;
 using RapidPayChallenge.Domain.Models;
 using RapidPayChallenge.PaymFees;
@@ -34,13 +35,28 @@ namespace RapidPayChallenge.CardMngr
             _defaultAccountEmail = config["DefaultEmail"];
         }
 
-        public async Task<string> CreateNewCard(Card req)
+        public async Task<string> CreateNewCard(CreateCardDTO req)
         {
             Guid accountId;
+            Card card = new Card
+            {
+                Balance = req.Balance,
+                CVC = req.CVC,
+                ExpMonth = req.ExpMonth,
+                ExpYear = req.ExpYear,
+                Number = req.Number,
+                Account = new Account()
+                {
+                    Email = req.Account.Email,
+                    FirstName = req.Account.FirstName,
+                    LastName = req.Account.LastName,
+                    Pass = req.Account.Pass
+                }
+            };
 
             if (req.Account != null)
             {
-                accountId = await accountRepository.CreateAccount(req.Account);
+                accountId = await accountRepository.CreateAccount(card.Account);
             }
             else
             {
@@ -48,7 +64,7 @@ namespace RapidPayChallenge.CardMngr
                 accountId = defaultAccount != null ? defaultAccount.Id : throw new ApplicationException("Default account not found");
             }
 
-            return await cardRepository.CreateNewCard(req, accountId);
+            return await cardRepository.CreateNewCard(card, accountId);
         }
 
         public async Task<decimal?> GetCardBalance(string cardNumber)
@@ -63,28 +79,21 @@ namespace RapidPayChallenge.CardMngr
 
         public async Task<(string,decimal,decimal)> ProcessPayment(string Number, decimal Amount)
         {
-            try
+            logger.LogInformation(
+                $"Process a payment with card number {Number} and amount {Amount}");
+            var currBalance = await GetCardBalance(Number) ?? throw new ArgumentException("The card has no balance");
+
+            var feeToPay = await UFEService.Instance.GetPaymentFee(paymFeeRepository);
+
+            var totalDiscounted = Amount + feeToPay;
+            if (currBalance - totalDiscounted < 0)
             {
-                logger.LogInformation(
-                   $"Process a payment with card number {Number} and amount {Amount}");
-                var currBalance = await GetCardBalance(Number) ?? throw new ArgumentException("The card has no balance");
-
-                var feeToPay = await UFEService.Instance.GetPaymentFee(paymFeeRepository);
-
-                var totalDiscounted = Amount + feeToPay;
-                if (currBalance - totalDiscounted < 0)
-                {
-                    throw new ArgumentException("There is not enough balance to process this payment");
-                }
-
-                await cardRepository.SaveTransaction(Number, Amount, feeToPay);
-
-                return (Number, Amount, feeToPay);
+                throw new ArgumentException("There is not enough balance to process this payment");
             }
-            catch(Exception e)
-            {
-                throw e;
-            }
+
+            await cardRepository.SaveTransaction(Number, Amount, feeToPay);
+
+            return (Number, Amount, feeToPay);
         }
     }
 }

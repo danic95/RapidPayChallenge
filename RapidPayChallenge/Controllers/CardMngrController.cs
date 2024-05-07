@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RapidPayChallenge.CardMngr;
-using RapidPayChallenge.Domain.Models;
+using RapidPayChallenge.CardMngr.DTO;
 using RapidPayChallenge.Requests;
 using RapidPayChallenge.Responses;
 
@@ -31,24 +31,28 @@ namespace RapidPayChallenge.Controllers
         {
             try
             {
-                CreateCardResp resp = new CreateCardResp()
-                {
-                    Number = await _cardMngrService.CreateNewCard(new Card {
+                CreateCardDTO cardDTO = new CreateCardDTO() {
+                    Number = req.Number,
                     Balance = req.Balance,
                     CVC = req.CVC,
                     ExpMonth = req.ExpMonth,
                     ExpYear = req.ExpYear,
-                    Number = req.Number,
-                    Account = new Account()
+                    Account = new AccountDTO()
                     {
                         Email = req.Account.Email,
                         FirstName = req.Account.FirstName,
                         LastName = req.Account.LastName,
                         Pass = req.Account.Pass
                     }
-                    })
                 };
-                return CreatedAtAction("Balance", new { cardNum = resp.Number }, resp);
+                CreateCardResp resp = new CreateCardResp()
+                {
+                    Number = await _cardMngrService.CreateNewCard(cardDTO)
+                };
+
+                if (resp.Number == null) throw new Exception("Error adding new card");
+
+                return CreatedAtAction("CreateCard", new { resp.Number }, resp);
             }
             catch (Exception ex)
             {
@@ -95,17 +99,17 @@ namespace RapidPayChallenge.Controllers
 
         // GET: CardMngrController/Balance/12345
         [HttpGet("CardMngrController/Balance/{cardNum}")]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<BalanceResp>> Balance([FromRoute] string cardNum)
         {
             try
             {
                 BalanceResp card = new BalanceResp()
                 {
-                    Balance = (decimal)await _cardMngrService.GetCardBalance(cardNum),
+                    Balance = await _cardMngrService.GetCardBalance(cardNum),
                     Number = cardNum
                 };
-                if (card == null)
+                if (card.Balance == null)
                 {
                     return NotFound(new { message = $"Card number {cardNum} does not exist" });
                 }

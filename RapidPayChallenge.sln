@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge", "RapidPayChallenge\RapidPayChallenge.csproj", "{8D75F4B5-A115-4274-B82B-575546927303}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge", "RapidPayChallenge\RapidPayChallenge.csproj", "{8D75F4B5-A115-4274-B82B-575546927303}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA02420A-DF51-47D4-82B0-6E14FB15D128} = {EA02420A-DF51-47D4-82B0-6E14FB15D128}
 		{673DBF29-C3E2-4A7A-87F3-C34531D62C7D} = {673DBF29-C3E2-4A7A-87F3-C34531D62C7D}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.Domain", "RapidPayChallenge.Domain\RapidPayChallenge.Domain.csproj", "{673DBF29-C3E2-4A7A-87F3-C34531D62C7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.Domain", "RapidPayChallenge.Domain\RapidPayChallenge.Domain.csproj", "{673DBF29-C3E2-4A7A-87F3-C34531D62C7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.CardMngr", "RapidPayChallenge.CardMngr\RapidPayChallenge.CardMngr.csproj", "{EA02420A-DF51-47D4-82B0-6E14FB15D128}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.CardMngr", "RapidPayChallenge.CardMngr\RapidPayChallenge.CardMngr.csproj", "{EA02420A-DF51-47D4-82B0-6E14FB15D128}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.Data", "RapidPayChallenge.Data\RapidPayChallenge.Data.csproj", "{2B15416D-9B80-47C9-B573-83CB8F842153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.Data", "RapidPayChallenge.Data\RapidPayChallenge.Data.csproj", "{2B15416D-9B80-47C9-B573-83CB8F842153}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.PaymFees", "RapidPayChallenge.PaymFees\RapidPayChallenge.PaymFees.csproj", "{3CD4FC59-5AE2-4EC4-9871-28DA8E2B43C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.PaymFees", "RapidPayChallenge.PaymFees\RapidPayChallenge.PaymFees.csproj", "{3CD4FC59-5AE2-4EC4-9871-28DA8E2B43C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.Tests", "RapidPayChallenge.Tests\RapidPayChallenge.Tests.csproj", "{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{3CD4FC59-5AE2-4EC4-9871-28DA8E2B43C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CD4FC59-5AE2-4EC4-9871-28DA8E2B43C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CD4FC59-5AE2-4EC4-9871-28DA8E2B43C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,6 @@ namespace RapidPayChallenge.Domain.Models
 {
     public class Card
     {
-
         public Guid Id { get; set; }
 
         public string Number { get; set; }
