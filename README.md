@@ -13,10 +13,10 @@ This application is designed to provide a simple authentication system along wit
 To authenticate a user and obtain an access token, send a POST request to `/access-token` with the user's credentials (`User` and `Pass`) in the request body. The response will contain an access token and its expiration date.
 
 Example request:
+```JSON
 POST /access-token
 Content-Type: application/json
 
-```JSON
 {
   "User": "testuser",
   "Pass": "testpassword"
@@ -28,11 +28,11 @@ Content-Type: application/json
 To create a new card, send a POST request to `/CardMngrController/CreateCard` with the card details in the request body. This endpoint requires authentication and a valid JWT token in the request headers.
 
 Example request:
+```JSON
 POST /CardMngrController/CreateCard
 Content-Type: application/json
 Authorization: Bearer [JWT token]
 
-```JSON
 {
   "Number": "1234567890123456",
   "Balance": 100,
@@ -52,11 +52,11 @@ Authorization: Bearer [JWT token]
 To make a payment, send a PUT request to `/CardMngrController/Payment` with the card number and the amount to be paid in the request body. This endpoint also requires authentication and a valid JWT token.
 
 Example request:
+```json
 PUT /CardMngrController/Payment
 Content-Type: application/json
 Authorization: Bearer [JWT token]
 
-```json
 {
   "Number": "1234567890123456",
   "Amount": 50
