@@ -16,11 +16,12 @@ Example request:
 POST /access-token
 Content-Type: application/json
 
+```JSON
 {
   "User": "testuser",
   "Pass": "testpassword"
 }
-
+```
 
 ### Card Management
 #### Create a New Card
@@ -31,6 +32,7 @@ POST /CardMngrController/CreateCard
 Content-Type: application/json
 Authorization: Bearer [JWT token]
 
+```JSON
 {
   "Number": "1234567890123456",
   "Balance": 100,
@@ -44,7 +46,7 @@ Authorization: Bearer [JWT token]
     "Pass": "password"
   }
 }
-
+```
 
 #### Process Payment
 To make a payment, send a PUT request to `/CardMngrController/Payment` with the card number and the amount to be paid in the request body. This endpoint also requires authentication and a valid JWT token.
@@ -54,11 +56,12 @@ PUT /CardMngrController/Payment
 Content-Type: application/json
 Authorization: Bearer [JWT token]
 
+```json
 {
   "Number": "1234567890123456",
   "Amount": 50
 }
-
+```
 
 #### Check Card Balance
 To check the balance of a card, send a GET request to `/CardMngrController/Balance/{cardNum}` where `{cardNum}` is the card number. This endpoint also requires authentication and a valid JWT token.
