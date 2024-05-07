@@ -99,7 +99,6 @@ namespace RapidPayChallenge.Controllers
 
         // GET: CardMngrController/Balance/12345
         [HttpGet("CardMngrController/Balance/{cardNum}")]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult<BalanceResp>> Balance([FromRoute] string cardNum)
         {
             try
