@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RapidPayChallenge.Domain.Requests
+namespace RapidPayChallenge.Responses
 {
-    public class PaymReq
+    public class CreateCardResp
     {
         public string Number { get; set; } = null!;
-
-        public decimal Amount { get; set; }
-
-        public string? Reference { get; set; }
     }
 }

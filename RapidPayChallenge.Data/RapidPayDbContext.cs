@@ -33,7 +33,7 @@ namespace RapidPayChallenge.Data
                 .HasKey(k => k.Id);
             modelBuilder.Entity<Card>()
                 .Property(k => k.Number)
-                .HasMaxLength(15);
+                .HasMaxLength(16);
             modelBuilder.Entity<Card>()
                 .Property(k => k.Number)
                 .IsRequired();
@@ -86,7 +86,7 @@ namespace RapidPayChallenge.Data
                new Card
                {
                    Id = Guid.NewGuid(),
-                   Number = "422856726227993",
+                   Number = "4228567262279934",
                    ExpMonth = 12,
                    ExpYear = 2026,
                    CVC = "481",

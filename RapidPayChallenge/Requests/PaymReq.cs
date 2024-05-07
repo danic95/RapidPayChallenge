@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RapidPayChallenge.Domain.Responses
+namespace RapidPayChallenge.Requests
 {
-    public class BalanceResp
+    public class PaymReq
     {
         public string Number { get; set; } = null!;
-        public decimal Balance { get; set; }
+
+        public decimal Amount { get; set; }
+
     }
 }

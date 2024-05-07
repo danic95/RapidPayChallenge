@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RapidPayChallenge.Domain.Requests;
+using RapidPayChallenge.Domain.Models;
 
 namespace RapidPayChallenge.CardMngr
 {
     public interface IUserAuthService
     {
-        public (string?, DateTime?) GetAccessToken(LoginReq req);
+        public Task<(string?, DateTime?)> GetAccessToken(string Email, string Pass);
     }
 }

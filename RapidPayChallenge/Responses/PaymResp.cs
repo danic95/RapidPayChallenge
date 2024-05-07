@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RapidPayChallenge.Domain.Responses
+namespace RapidPayChallenge.Responses
 {
     public class PaymResp
     {

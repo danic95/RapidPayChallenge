@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RapidPayChallenge.Domain.Requests
+namespace RapidPayChallenge.CardMngr.DTO
 {
-    public class CreateCardReq
+    public class CreateCardDTO
     {
         public string Number { get; set; }
 
@@ -18,10 +18,10 @@ namespace RapidPayChallenge.Domain.Requests
 
         public decimal Balance { get; set; } = 0;
 
-        public AccountReq? Account { get; set; } = null!;
+        public AccountDTO? Account { get; set; } = null!;
     }
 
-    public class AccountReq
+    public class AccountDTO
     {
         public string FirstName { get; set; }
 

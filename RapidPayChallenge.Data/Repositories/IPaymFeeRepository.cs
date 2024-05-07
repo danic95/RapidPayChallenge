@@ -8,8 +8,8 @@ namespace RapidPayChallenge.Data.Repositories
 {
     public interface IPaymFeeRepository
     {
-        bool CreateNewPaymFee(decimal fee);
+        Task<bool> CreateNewPaymFee(decimal fee);
 
-        (decimal currentFee, DateTime lastUpdated) GetLastPaymFee();
+        Task<(decimal currentFee, DateTime lastUpdated)> GetLastPaymFee();
     }
 }

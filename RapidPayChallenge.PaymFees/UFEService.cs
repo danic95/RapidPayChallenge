@@ -15,14 +15,14 @@ namespace RapidPayChallenge.PaymFees
         {
         }
 
-        public decimal GetPaymentFee(IPaymFeeRepository repository)
+        public async Task<decimal> GetPaymentFee(IPaymFeeRepository repository)
         {
-            var (currFee, lastUpdated) = repository.GetLastPaymFee();
+            var (currFee, lastUpdated) = await repository.GetLastPaymFee();
             decimal paymFee = currFee;
             if ((lastUpdated - DateTime.UtcNow).TotalHours > 1)
             {
                 var newFee = PaymFeeGen.GenPaymFee(paymFee);
-                repository.CreateNewPaymFee(newFee);
+                await repository.CreateNewPaymFee(newFee);
                 paymFee = newFee;
             }
 

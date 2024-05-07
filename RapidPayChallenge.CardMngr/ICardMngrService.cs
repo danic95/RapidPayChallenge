@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RapidPayChallenge.Domain.Requests;
-using RapidPayChallenge.Domain.Responses;
+﻿using System.Threading.Tasks;
+using RapidPayChallenge.CardMngr.DTO;
 
 namespace RapidPayChallenge.CardMngr
 {
     public interface ICardMngrService
     {
-        public CreateCardResp CreateNewCard(CreateCardReq req);
+        public Task<string> CreateNewCard(CreateCardDTO req);
 
-        PaymResp ProcessPayment(PaymReq request);
+        Task<(string, decimal, decimal)> ProcessPayment(string Number, decimal Amount);
 
-        public BalanceResp? GetCardBalance(string cardNumber);
+        public Task<decimal?> GetCardBalance(string cardNumber);
     }
 }

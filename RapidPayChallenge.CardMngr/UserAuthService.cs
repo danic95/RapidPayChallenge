@@ -8,7 +8,6 @@ using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RapidPayChallenge.Data.Repositories;
-using RapidPayChallenge.Domain.Requests;
 
 namespace RapidPayChallenge.CardMngr
 {
@@ -23,15 +22,15 @@ namespace RapidPayChallenge.CardMngr
             this.config = config;
         }
 
-        public (string?, DateTime?) GetAccessToken(LoginReq req)
+        public async Task<(string?, DateTime?)> GetAccessToken(string Email, string Pass)
         {
-            var account = accountRepository.GetAccount(req.User);
+            var account = await accountRepository.GetAccount(Email);
             if (account == null)
             {
                 return (null, null);
             }
 
-            if (account.Pass == req.Pass)
+            if (account.Pass == Pass)
             {
                 var issuer = config["Jwt:Issuer"];
                 var audience = config["Jwt:Audience"];

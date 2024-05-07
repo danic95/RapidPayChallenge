@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RapidPayChallenge.Domain.Models;
-using RapidPayChallenge.Domain.Requests;
 
 namespace RapidPayChallenge.Data.Repositories
 {
@@ -17,29 +16,22 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public Guid CreateAccount(AccountReq req)
+        public async Task<Guid> CreateAccount(Account newAccount)
         {
-            var account = GetAccount(req.Email ?? string.Empty);
+            var account = await GetAccount(newAccount.Email ?? string.Empty);
             if (account != null)
             {
                 return account.Id;
             }
 
-            var newAccount = new Account
-            {
-                FirstName = req.FirstName ?? string.Empty,
-                LastName = req.LastName ?? string.Empty,
-                Email = req.Email ?? string.Empty,
-                Pass = req.Pass ?? string.Empty,
-            };
             context.Add(newAccount);
             context.SaveChanges();
 
             return newAccount.Id;
         }
 
-        public Account GetAccount(string email) =>
-            context.Accounts.FirstOrDefault(x => x.Email == email);
+        public async Task<Account> GetAccount(string email) =>
+            await context.Accounts.FirstOrDefaultAsync(x => x.Email == email);
 
     }
 }

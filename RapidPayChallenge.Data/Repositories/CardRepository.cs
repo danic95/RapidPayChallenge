@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RapidPayChallenge.Domain.Models;
-using RapidPayChallenge.Domain.Requests;
-using RapidPayChallenge.Domain.Responses;
 
 namespace RapidPayChallenge.Data.Repositories
 {
@@ -18,26 +16,21 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public CreateCardResp CreateNewCard(CreateCardReq req, Guid accountId)
+        public async Task<string> CreateNewCard(Card newCard, Guid accountId)
         {
-            var newCard = new Card
+            using (var dbContextTransaction = context.Database.BeginTransaction())
             {
-                Number = req.Number,
-                ExpMonth = req.ExpMonth,
-                ExpYear = req.ExpYear,
-                CVC = req.CVC,
-                Balance = req.Balance,
-                AccountId = accountId
-            };
-            context.Add(newCard);
-            context.SaveChanges();
+                await context.AddAsync(newCard);
+                await context.SaveChangesAsync();
 
-            return new CreateCardResp() { Number = newCard.Number };
+                dbContextTransaction.Commit();
+            }
+            return newCard.Number;
         }
 
-        public decimal? GetCardBalance(string cardNumber)
+        public async Task<decimal?> GetCardBalance(string cardNumber)
         {
-            var card = GetCard(cardNumber);
+            var card = await GetCard(cardNumber);
             if (card == null)
             {
                 return null;
@@ -45,38 +38,33 @@ namespace RapidPayChallenge.Data.Repositories
             return card.Balance;
         }
 
-        public bool SaveTransaction(string cardNumber, decimal payment, decimal fee, string? reference)
+        public async Task<bool> SaveTransaction(string cardNumber, decimal payment, decimal fee)
         {
-            var card = GetCard(cardNumber);
-            if (card == null)
+            using (var dbContextTransaction = context.Database.BeginTransaction())
             {
-                return false;
+                var card = await GetCard(cardNumber);
+                if (card == null)
+                {
+                    return false;
+                }
+                var payTransaction = new Transac
+                {
+                    Amount = payment,
+                    PaymFee = fee,
+                    CardId = card.Id
+                };
+                card.Balance -= payment + fee;
+                await context.AddAsync(payTransaction);
+                await context.SaveChangesAsync();
+
+                dbContextTransaction.Commit();
             }
-            var payTransaction = new Transac
-            {
-                Amount = payment,
-                PaymFee = fee,
-                CardId = card.Id
-            };
-            context.Add(payTransaction);
-            context.SaveChanges();
+
             return true;
         }
 
-        public bool UpdateBalance(string cardNumber, decimal amount)
-        {
-            var card = GetCard(cardNumber);
-            if (card == null)
-            {
-                return false;
-            }
-            card.Balance -= amount;
-            context.SaveChanges();
-            return true;
-        }
-
-        public Card GetCard(string cardNumber) =>
-            context.Cards.FirstOrDefault(x => x.Number == cardNumber);
+        public async Task<Card> GetCard(string cardNumber) =>
+            await context.Cards.FirstOrDefaultAsync(x => x.Number == cardNumber);
 
     }
 }
