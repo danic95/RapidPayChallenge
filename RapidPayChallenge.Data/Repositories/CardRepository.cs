@@ -16,7 +16,7 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public async Task<string> CreateNewCard(Card newCard, Guid accountId)
+        public async Task<string> CreateNewCard(Card newCard, string accountId)
         {
             using (var dbContextTransaction = context.Database.BeginTransaction())
             {

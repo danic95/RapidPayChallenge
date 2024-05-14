@@ -30,7 +30,7 @@ namespace RapidPayChallenge.CardMngr
                 return (null, null);
             }
 
-            if (account.Pass == Pass)
+            if (BCrypt.Net.BCrypt.Verify(Pass, account.PasswordHash))
             {
                 var issuer = config["Jwt:Issuer"];
                 var audience = config["Jwt:Audience"];

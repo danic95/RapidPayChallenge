@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using RapidPayChallenge.Domain.Helper;
 using RapidPayChallenge.Domain.Models;
@@ -24,10 +25,18 @@ namespace RapidPayChallenge.Data
 
             modelBuilder.Entity<Account>()
                 .HasKey(k => k.Id);
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.HasNoKey();
+            });
             modelBuilder.Entity<Account>()
                 .Property(k => k.Email).IsRequired();
             modelBuilder.Entity<Account>()
-                .Property(k => k.Pass).IsRequired();
+                .Property(k => k.PasswordHash).IsRequired();
 
             modelBuilder.Entity<Card>()
                 .HasKey(k => k.Id);
@@ -66,19 +75,19 @@ namespace RapidPayChallenge.Data
             modelBuilder.Entity<Account>().HasData(
                 new Account
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     FirstName = "Admin",
                     LastName = "RapidPay",
                     Email = "admin@rapidpay.com",
-                    Pass = "RapidPay!2024"
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("RapidPay!2024")
                 },
                 new Account
                 {
-                    Id = demoAccountId,
+                    Id = demoAccountId.ToString(),
                     FirstName = "Daniel",
                     LastName = "Carias",
                     Email = "dcarias@rapidpay.com",
-                    Pass = "Daniel!2024"
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Daniel!2024")
                 }
             );
 
@@ -91,7 +100,7 @@ namespace RapidPayChallenge.Data
                    ExpYear = 2026,
                    CVC = "481",
                    Balance = 10000,
-                   AccountId = demoAccountId
+                   AccountId = demoAccountId.ToString()
                });
 
             modelBuilder.Entity<PaymFee>().HasData(

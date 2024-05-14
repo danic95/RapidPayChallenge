@@ -58,12 +58,7 @@ namespace RapidPayChallenge
             });
             services.AddDbContext<RapidPayDbContext>(
         options => options.UseSqlServer(Configuration.GetConnectionString("RapidPayDb"),
-        x => x.MigrationsAssembly("RapidPay.Data")));
-            services.AddScoped<ICardMngrService, CardMngrService>();
-            services.AddScoped<IUserAuthService, UserAuthService>();
-            services.AddScoped<ICardRepository, CardRepository>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IPaymFeeRepository, PaymFeeRepository>();
+        x => x.MigrationsAssembly("RapidPayChallenge.Data")));
             services.AddControllers();
 
             services.AddAuthentication(options =>

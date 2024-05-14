@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.Data", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.PaymFees", "RapidPayChallenge.PaymFees\RapidPayChallenge.PaymFees.csproj", "{3CD4FC59-5AE2-4EC4-9871-28DA8E2B43C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.Tests", "RapidPayChallenge.Tests\RapidPayChallenge.Tests.csproj", "{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidPayChallenge.Tests", "RapidPayChallenge.Tests\RapidPayChallenge.Tests.csproj", "{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidPayChallenge.BusinessLogic", "RapidPayChallenge.BusinessLogic\RapidPayChallenge.BusinessLogic.csproj", "{8AF546CC-D2E3-4DA3-9F2E-80D6D2C8C873}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DAD8DFF-B889-4B85-A4CB-C0DFBE63359A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AF546CC-D2E3-4DA3-9F2E-80D6D2C8C873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AF546CC-D2E3-4DA3-9F2E-80D6D2C8C873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AF546CC-D2E3-4DA3-9F2E-80D6D2C8C873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AF546CC-D2E3-4DA3-9F2E-80D6D2C8C873}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

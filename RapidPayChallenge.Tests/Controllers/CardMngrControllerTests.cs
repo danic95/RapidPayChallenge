@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using RapidPayChallenge.CardMngr;
 using RapidPayChallenge.CardMngr.DTO;
@@ -19,18 +19,18 @@ namespace RapidPayChallenge.Tests.Controllers
 {
     public class CardMngrControllerTests
     {
-        private Mock<ICardMngrService> _cardMngrServiceMock;
-        private Mock<ILogger<CardMngrController>> _loggerMock;
-        private Mock<IJwtService> _jwtServiceMock;
+        private ICardMngrService _cardMngrServiceMock;
+        private ILogger<CardMngrController> _loggerMock;
+        private IJwtService _jwtServiceMock;
         private CardMngrController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _cardMngrServiceMock = new Mock<ICardMngrService>();
-            _loggerMock = new Mock<ILogger<CardMngrController>>();
-            _jwtServiceMock = new Mock<IJwtService>();
-            _controller = new CardMngrController(_cardMngrServiceMock.Object, _loggerMock.Object);
+            _cardMngrServiceMock = Substitute.For<ICardMngrService>();
+            _loggerMock = Substitute.For<ILogger<CardMngrController>>();
+            _jwtServiceMock = Substitute.For<IJwtService>();
+            _controller = new CardMngrController(_cardMngrServiceMock, _loggerMock);
             _controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -43,7 +43,7 @@ namespace RapidPayChallenge.Tests.Controllers
                 }
             };
 
-            _jwtServiceMock.Setup(x => x.GenerateJwtToken(It.IsAny<string>(), It.IsAny<string>()))
+            _jwtServiceMock.GenerateJwtToken(Arg.Any<string>(), Arg.Any<string>())
                            .Returns("validJWTToken");
         }
 
@@ -83,7 +83,7 @@ namespace RapidPayChallenge.Tests.Controllers
                 }
             };
 
-            _cardMngrServiceMock.Setup(x => x.CreateNewCard(cardDTO)).ReturnsAsync(req.Number);
+            _cardMngrServiceMock.CreateNewCard(cardDTO).Returns(req.Number);
 
             // Act
             var result = await _controller.CreateCard(req);
@@ -113,8 +113,8 @@ namespace RapidPayChallenge.Tests.Controllers
                 FeePaid = 0
             };
 
-            _cardMngrServiceMock.Setup(x => x.ProcessPayment(req.Number, req.Amount))
-                                .ReturnsAsync((req.Number, 50, 0));
+            _cardMngrServiceMock.ProcessPayment(req.Number, req.Amount)
+                                .Returns((req.Number, 50, 0));
 
             // Act
             var result = await _controller.Payment(req);
@@ -136,7 +136,7 @@ namespace RapidPayChallenge.Tests.Controllers
             var cardNum = "1234567890123456";
             var balance = 100;
 
-            _cardMngrServiceMock.Setup(x => x.GetCardBalance(cardNum)).ReturnsAsync(balance);
+            _cardMngrServiceMock.GetCardBalance(cardNum).Returns(balance);
 
             // Act
             var result = await _controller.Balance(cardNum);
@@ -156,7 +156,7 @@ namespace RapidPayChallenge.Tests.Controllers
             // Arrange
             var req = new CreateCardReq
             {
-                Number = "123456789012345678",
+                Number = "123456789012345678910",
                 Balance = 100,
                 CVC = "123",
                 ExpMonth = 12,
@@ -186,7 +186,7 @@ namespace RapidPayChallenge.Tests.Controllers
                 }
             };
 
-            _cardMngrServiceMock.Setup(x => x.CreateNewCard(cardDTO)).ThrowsAsync(new Exception("Test exception"));
+            _cardMngrServiceMock.When(x => x.CreateNewCard(cardDTO)).Do(x => { throw new Exception("Test exception"); });
 
             // Act
             var result = await _controller.CreateCard(req);
@@ -207,8 +207,7 @@ namespace RapidPayChallenge.Tests.Controllers
                 Amount = -50 // Negative amount to trigger ArgumentException
             };
 
-            _cardMngrServiceMock.Setup(x => x.ProcessPayment(req.Number, req.Amount))
-                                .ThrowsAsync(new ArgumentException("Invalid amount"));
+            _cardMngrServiceMock.When(x => x.ProcessPayment(req.Number, req.Amount)).Do(x => { throw new ArgumentException("Invalid Amount"); });
 
             // Act
             var result = await _controller.Payment(req);
@@ -229,8 +228,7 @@ namespace RapidPayChallenge.Tests.Controllers
                 Amount = 50
             };
 
-            _cardMngrServiceMock.Setup(x => x.ProcessPayment(req.Number, req.Amount))
-                                .ThrowsAsync(new Exception("Test exception"));
+            _cardMngrServiceMock.When(x => x.ProcessPayment(req.Number, req.Amount)).Do(x => { throw new Exception("Test exception"); });
 
             // Act
             var result = await _controller.Payment(req);
@@ -247,8 +245,7 @@ namespace RapidPayChallenge.Tests.Controllers
             // Arrange
             var cardNum = "1234567890123456";
 
-            _cardMngrServiceMock.Setup(x => x.GetCardBalance(cardNum))
-                                .ThrowsAsync(new Exception("Test exception"));
+            _cardMngrServiceMock.When(x => x.GetCardBalance(cardNum)).Do(x => { throw new Exception("Test exception"); });
 
             // Act
             var result = await _controller.Balance(cardNum);
@@ -265,8 +262,8 @@ namespace RapidPayChallenge.Tests.Controllers
             // Arrange
             var cardNum = "1234567890123456";
 
-            _cardMngrServiceMock.Setup(x => x.GetCardBalance(cardNum))
-                                .ReturnsAsync((decimal?)null);
+            _cardMngrServiceMock.GetCardBalance(cardNum)
+                                .Returns((decimal?)null);
 
             // Act
             var result = await _controller.Balance(cardNum);

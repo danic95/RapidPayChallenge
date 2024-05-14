@@ -37,7 +37,7 @@ namespace RapidPayChallenge.CardMngr
 
         public async Task<string> CreateNewCard(CreateCardDTO req)
         {
-            Guid accountId;
+            string accountId;
             Card card = new Card
             {
                 Balance = req.Balance,
@@ -47,10 +47,11 @@ namespace RapidPayChallenge.CardMngr
                 Number = req.Number,
                 Account = new Account()
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Email = req.Account.Email,
                     FirstName = req.Account.FirstName,
                     LastName = req.Account.LastName,
-                    Pass = req.Account.Pass
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Account.Pass)
                 }
             };
 

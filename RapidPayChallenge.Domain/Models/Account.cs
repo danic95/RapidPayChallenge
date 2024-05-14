@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RapidPayChallenge.Domain.Models
 {
-    public class Account
+    public class Account : IdentityUser
     {
-        public Guid Id { get; set; }
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public string Email { get; set; }
-
-        public string Pass { get; set; }
         public virtual ICollection<Card> Cards { get; set; } = null!;
     }
 }

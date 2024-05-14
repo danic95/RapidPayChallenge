@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RapidPayChallenge.CardMngr\RapidPayChallenge.CardMngr.csproj" />
+    <ProjectReference Include="..\RapidPayChallenge.Data\RapidPayChallenge.Data.csproj" />
+  </ItemGroup>
+
+</Project>

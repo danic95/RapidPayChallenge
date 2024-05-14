@@ -50,7 +50,7 @@ namespace RapidPayChallenge.Controllers
                     Number = await _cardMngrService.CreateNewCard(cardDTO)
                 };
 
-                if (resp.Number == null) throw new Exception("Error adding new card");
+                if (resp.Number == null || resp.Number == string.Empty) throw new Exception("Error adding new card");
 
                 return CreatedAtAction("CreateCard", new { resp.Number }, resp);
             }

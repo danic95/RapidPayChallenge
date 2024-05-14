@@ -20,7 +20,7 @@ namespace RapidPayChallenge.Domain.Models
 
         public decimal Balance { get; set; }
 
-        public Guid AccountId { get; set; }
+        public string AccountId { get; set; }
 
         public virtual Account Account { get; set; } = null!;
 

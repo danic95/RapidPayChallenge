@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using RapidPayChallenge.CardMngr;
 using RapidPayChallenge.Controllers;
@@ -14,16 +14,16 @@ namespace RapidPayChallenge.Tests.Controllers
 {
     public class AuthControllerTests
     {
-        private Mock<IUserAuthService> _userAuthServiceMock;
-        private Mock<ILogger<AuthController>> _loggerMock;
+        private IUserAuthService _userAuthServiceMock;
+        private ILogger<AuthController> _loggerMock;
         private AuthController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _userAuthServiceMock = new Mock<IUserAuthService>();
-            _loggerMock = new Mock<ILogger<AuthController>>();
-            _controller = new AuthController(_userAuthServiceMock.Object, _loggerMock.Object);
+            _userAuthServiceMock = Substitute.For<IUserAuthService>();
+            _loggerMock = Substitute.For<ILogger<AuthController>>();
+            _controller = new AuthController(_userAuthServiceMock, _loggerMock);
         }
 
         [Test]
@@ -45,8 +45,8 @@ namespace RapidPayChallenge.Tests.Controllers
             var accessToken = "validAccessToken";
             var expiresAt = DateTime.UtcNow.AddHours(1);
 
-            _userAuthServiceMock.Setup(x => x.GetAccessToken(req.User, req.Pass))
-                                .ReturnsAsync((accessToken, expiresAt));
+            _userAuthServiceMock.GetAccessToken(req.User, req.Pass)
+                                .Returns((accessToken, expiresAt));
 
             // Act
             var result = await _controller.GetAccessToken(req);
@@ -70,8 +70,7 @@ namespace RapidPayChallenge.Tests.Controllers
                 Pass = "testpassword"
             };
 
-            _userAuthServiceMock.Setup(x => x.GetAccessToken(req.User, req.Pass))
-                                .ThrowsAsync(new Exception("Test exception"));
+            _userAuthServiceMock.When(x => x.GetAccessToken(req.User, req.Pass)).Do(x => { throw new Exception("Test exception"); });
 
             // Act
             var result = await _controller.GetAccessToken(req);

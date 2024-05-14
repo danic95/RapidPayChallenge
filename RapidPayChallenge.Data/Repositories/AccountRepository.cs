@@ -16,7 +16,7 @@ namespace RapidPayChallenge.Data.Repositories
             this.context = context;
         }
 
-        public async Task<Guid> CreateAccount(Account newAccount)
+        public async Task<string> CreateAccount(Account newAccount)
         {
             var account = await GetAccount(newAccount.Email ?? string.Empty);
             if (account != null)

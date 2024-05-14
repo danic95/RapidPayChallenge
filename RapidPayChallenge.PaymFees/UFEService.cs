@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using RapidPayChallenge.Data.Repositories;
 using RapidPayChallenge.Domain.Helper;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace RapidPayChallenge.PaymFees
 {
@@ -14,6 +15,7 @@ namespace RapidPayChallenge.PaymFees
         private UFEService()
         {
         }
+
 
         public async Task<decimal> GetPaymentFee(IPaymFeeRepository repository)
         {

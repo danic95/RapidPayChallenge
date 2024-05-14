@@ -9,7 +9,7 @@ namespace RapidPayChallenge.Data.Repositories
 {
     public interface ICardRepository
     {
-        Task<string> CreateNewCard(Card req, Guid accountId);
+        Task<string> CreateNewCard(Card req, string accountId);
 
         Task<decimal?> GetCardBalance(string cardNumber);
 
